@@ -24,6 +24,10 @@ class CommitLinksApp(QWidget):
         self.repo_url_label = QLabel("Enter a GitHub repository URL:")
         self.repo_url_edit = QLineEdit()
 
+        # Create the input field for the security token
+        self.token_label = QLabel("Enter your GitHub personal access token:")
+        self.token_edit = QLineEdit()
+
         # Create the input fields for the start and end dates
         self.start_date_label = QLabel("Enter start date (YYYY-MM-DD):")
         self.start_date_edit = QLineEdit()
@@ -46,6 +50,8 @@ class CommitLinksApp(QWidget):
         layout.addWidget(self.start_date_edit)
         layout.addWidget(self.end_date_label)
         layout.addWidget(self.end_date_edit)
+        layout.addWidget(self.token_label)
+        layout.addWidget(self.token_edit)
         layout.addWidget(self.fetch_button)
         layout.addWidget(self.commit_links_browser)
         self.setLayout(layout)
@@ -67,14 +73,24 @@ class CommitLinksApp(QWidget):
         owner = parts[3]
         repo = parts[4]
 
+        # Get the security token from the input field
+        token = self.token_edit.text()
+
         # Get the start and end dates for the commit search
         start_date = self.start_date_edit.text()
         end_date = self.end_date_edit.text()
 
+        if self.token_edit.text() != "":
+            # Add the Authorization header with the bearer token
+            headers = {"Authorization": f"Bearer {token}"}
+        else:
+            # Don't include the Authorization header
+            headers = {}
+
         # Make a request to the GitHub API to get the list of commits
         api_url = f"https://api.github.com/repos/{owner}/{repo}/commits"
         params = {"since": start_date, "until": end_date}
-        response = requests.get(api_url, params=params)
+        response = requests.get(api_url, headers=headers, params=params)
 
         # Check if the request was successful
         if response.status_code != 200:
