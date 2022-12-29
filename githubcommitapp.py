@@ -58,7 +58,7 @@ class CommitLinksApp(QWidget):
         self.setLayout(layout)
 
         self.setGeometry(300, 300, 300, 150)
-        self.setWindowTitle("Commit Links")
+        self.setWindowTitle("Github Commit Search")
         self.show()
 
     def fetch_commit_links(self):
