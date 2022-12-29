@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
     QWidget,
     QTextBrowser,
+    QFileDialog,
 )
 
 
@@ -42,6 +43,10 @@ class CommitLinksApp(QWidget):
         self.commit_links_browser = QTextBrowser()
         self.commit_links_browser.setOpenExternalLinks(True)
 
+        # Create the export button
+        self.export_button = QPushButton("Export Results")
+        self.export_button.clicked.connect(self.export_results)
+
         # Create the layout
         layout = QVBoxLayout()
         layout.addWidget(self.repo_url_label)
@@ -54,6 +59,7 @@ class CommitLinksApp(QWidget):
         layout.addWidget(self.token_edit)
         layout.addWidget(self.fetch_button)
         layout.addWidget(self.commit_links_browser)
+        layout.addWidget(self.export_button)
         self.setLayout(layout)
         self.setLayout(layout)
 
@@ -106,6 +112,22 @@ class CommitLinksApp(QWidget):
                 self.commit_links_browser.append(
                     f"<a href='{commit_url}'>{commit_url}</a>"
                 )
+
+    def export_results(self):
+        # Get the commit links from the text browser
+        commit_links = self.commit_links_browser.toPlainText()
+
+        # Prompt the user to select a file to save the commit links to
+        options = QFileDialog.Options()
+        options |= QFileDialog.ReadOnly
+        file_name, _ = QFileDialog.getSaveFileName(
+            self, "Save File", "", "Text Files (*.txt)", options=options
+        )
+
+        if file_name:
+            # Save the commit links to the selected file
+            with open(file_name, "w") as f:
+                f.write(commit_links)
 
 
 if __name__ == "__main__":
