@@ -106,7 +106,7 @@ class CommitLinksApp(QWidget):
             data = json.loads(response.text)
 
             # Add a clickable link for each commit to the text browser
-            for i, commit in enumerate(data[:10]):
+            for i, commit in enumerate(data[:500]):
                 commit_sha = commit["sha"]
                 commit_url = f"https://github.com/{owner}/{repo}/commit/{commit_sha}"
                 self.commit_links_browser.append(
