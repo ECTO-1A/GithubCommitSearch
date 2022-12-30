@@ -12,6 +12,7 @@ from PyQt5.QtWidgets import (
     QWidget,
     QTextBrowser,
     QFileDialog,
+    QCalendarWidget,
 )
 
 
@@ -29,11 +30,11 @@ class CommitLinksApp(QWidget):
         self.token_label = QLabel("Enter your GitHub personal access token:")
         self.token_edit = QLineEdit()
 
-        # Create the input fields for the start and end dates
-        self.start_date_label = QLabel("Enter start date (YYYY-MM-DD):")
-        self.start_date_edit = QLineEdit()
-        self.end_date_label = QLabel("Enter end date (YYYY-MM-DD):")
-        self.end_date_edit = QLineEdit()
+        # Create the calendar widgets for selecting the start and end dates
+        self.start_date_label = QLabel("Select start date:")
+        self.start_date_calendar = QCalendarWidget()
+        self.end_date_label = QLabel("Select end date:")
+        self.end_date_calendar = QCalendarWidget()
 
         # Create the button to fetch the commit links
         self.fetch_button = QPushButton("Fetch Commit Links")
@@ -51,19 +52,19 @@ class CommitLinksApp(QWidget):
         layout = QVBoxLayout()
         layout.addWidget(self.repo_url_label)
         layout.addWidget(self.repo_url_edit)
-        layout.addWidget(self.start_date_label)
-        layout.addWidget(self.start_date_edit)
-        layout.addWidget(self.end_date_label)
-        layout.addWidget(self.end_date_edit)
         layout.addWidget(self.token_label)
         layout.addWidget(self.token_edit)
+        layout.addWidget(self.start_date_label)
+        layout.addWidget(self.start_date_calendar)
+        layout.addWidget(self.end_date_label)
+        layout.addWidget(self.end_date_calendar)
         layout.addWidget(self.fetch_button)
         layout.addWidget(self.commit_links_browser)
         layout.addWidget(self.export_button)
         self.setLayout(layout)
         self.setLayout(layout)
 
-        self.setGeometry(300, 300, 300, 150)
+        self.setGeometry(700, 250, 300, 150)
         self.setWindowTitle("Github Commit Search")
         self.show()
 
@@ -83,8 +84,8 @@ class CommitLinksApp(QWidget):
         token = self.token_edit.text()
 
         # Get the start and end dates for the commit search
-        start_date = self.start_date_edit.text()
-        end_date = self.end_date_edit.text()
+        start_date = self.start_date_calendar.selectedDate().toString("yyyy-MM-dd")
+        end_date = self.end_date_calendar.selectedDate().toString("yyyy-MM-dd")
 
         if self.token_edit.text() != "":
             # Add the Authorization header with the bearer token
